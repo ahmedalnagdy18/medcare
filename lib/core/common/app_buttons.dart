@@ -40,3 +40,43 @@ class MainAppButton extends StatelessWidget {
     );
   }
 }
+
+class TranceparentAppButton extends StatelessWidget {
+  const TranceparentAppButton({
+    super.key,
+    required this.title,
+    required this.onPressed,
+    this.color,
+  });
+  final String title;
+  final void Function()? onPressed;
+  final Color? color;
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: WidgetStatePropertyAll(1),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadiusGeometry.circular(8.r),
+            side: BorderSide(color: AppColors.primary),
+          ),
+        ),
+        minimumSize: WidgetStatePropertyAll(Size(double.infinity, 37.h)),
+        padding: WidgetStatePropertyAll(
+          EdgeInsetsGeometry.symmetric(vertical: 10.h),
+        ),
+        backgroundColor: WidgetStatePropertyAll(
+          color ?? const Color(0xFFF1FBFB),
+        ),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        title,
+        style: AppTexts.button.copyWith(
+          color: AppColors.primary,
+        ),
+      ),
+    );
+  }
+}
