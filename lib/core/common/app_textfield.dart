@@ -71,15 +71,12 @@ class AppTextField extends StatelessWidget {
         );
       },
       autovalidateMode: autovalidateMode,
-      cursorColor: AppColors.green900,
+      cursorColor: AppColors.primary,
       onFieldSubmitted: onFieldSubmitted,
       readOnly: readOnly ?? false,
       autofocus: autofocus ?? false,
       focusNode: focusNode,
-      style: AppTexts.b1Body.copyWith(
-        fontWeight: FontWeight.w600,
-        color: AppColors.green900,
-      ),
+      style: AppTexts.c1Caption,
       onChanged: onChanged,
       obscureText: obscureText ?? false,
       maxLength: maxLength,
@@ -90,12 +87,10 @@ class AppTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+        contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
         labelText: label,
-        labelStyle: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-          color: Colors.grey,
+        labelStyle: AppTexts.c1Caption.copyWith(
+          color: Colors.grey[600],
         ),
         counterText: counterText,
         errorBorder: OutlineInputBorder(
@@ -109,27 +104,30 @@ class AppTextField extends StatelessWidget {
         //   overflow: TextOverflow.visible,
         // ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.green900),
+          borderSide: BorderSide(color: AppColors.red600),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(raduisSize ?? 8.r),
-          borderSide: BorderSide(color: AppColors.green900),
+          borderSide: BorderSide(color: AppColors.primary),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(raduisSize ?? 8.r),
-          borderSide: BorderSide(color: fillColor ?? AppColors.green900),
+          borderSide: BorderSide(color: fillColor ?? Colors.grey),
         ),
 
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         hintText: hintText,
         filled: true,
-        fillColor: fillColor ?? AppColors.green900,
-        hintStyle: TextStyle(
-          fontSize: hintFontSize ?? 14.sp,
-          fontWeight: FontWeight.w400,
-          color: hintTextColor ?? AppColors.green900,
+        fillColor: fillColor ?? AppColors.white,
+        hintStyle: AppTexts.c1Caption.copyWith(
+          color: hintTextColor ?? Colors.grey[600],
         ),
+        //  TextStyle(
+        //   fontSize: hintFontSize ?? 14.sp,
+        //   fontWeight: FontWeight.w400,
+        //   color: hintTextColor ?? AppColors.green900,
+        // ),
       ),
     );
   }

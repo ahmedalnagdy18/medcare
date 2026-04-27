@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medcare/core/colors/app_colors.dart';
 import 'package:medcare/core/common/app_buttons.dart';
 import 'package:medcare/core/fonts/app_text.dart';
+import 'package:medcare/features/authentication/presentation/screens/login_page.dart';
+import 'package:medcare/features/authentication/presentation/screens/sign_up_page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -51,9 +54,27 @@ class WelcomePage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 60.h),
-                    MainAppButton(title: 'Log In', onPressed: () {}),
+                    MainAppButton(
+                      title: 'Log In',
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 8.h),
-                    TranceparentAppButton(title: 'Sign Up', onPressed: () {}),
+                    TranceparentAppButton(
+                      title: 'Sign Up',
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          CupertinoPageRoute(
+                            builder: (context) => const SignUpPage(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
