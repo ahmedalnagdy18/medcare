@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   bool isObscure3 = true;
   int selectRole = 0;
   final GlobalKey<FormState> _key = GlobalKey();
+  final GlobalKey<FormState> _key2 = GlobalKey();
+  final GlobalKey<FormState> _key3 = GlobalKey();
   bool firstSeen = true;
   bool isButtonEnabled = false;
 
@@ -60,6 +62,10 @@ class _LoginPageState extends State<LoginPage> {
     _password3.dispose();
     super.dispose();
   }
+
+  bool get _resetPasswordValid =>
+      _password2.controller.text.isNotEmpty &&
+      _password3.controller.text.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: AlignmentGeometry.centerRight,
                       child: GestureDetector(
                         onTap: () {
+                          _forgetPassword.controller.clear();
                           showAppBottomSheet(
                             context: context,
                             title: 'Forgot password',
@@ -197,139 +204,193 @@ class _LoginPageState extends State<LoginPage> {
                                 'Enter your email for the verification proccesss, we will send 4 digits code to your email.',
                             buttonTitle: 'Continue',
                             buttonColor: AppColors.primary,
-                            widget: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 85.h),
-                                AppTextField(
-                                  controller: _forgetPassword.controller,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.deny(
-                                      RegExp(r'\s'),
+                            builder: (setStateSheet, isEnabled) => Form(
+                              key: _key2,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 85.h),
+                                  AppTextField(
+                                    controller: _forgetPassword.controller,
+                                    onChanged: (_) {
+                                      isEnabled.value = _forgetPassword
+                                          .controller
+                                          .text
+                                          .isNotEmpty;
+                                    },
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(
+                                        RegExp(r'\s'),
+                                      ),
+                                    ],
+                                    validator: (val) =>
+                                        AuthValidators.email(context, val),
+                                    hintText: 'Enter Your Email',
+                                    prefixIcon: Icon(
+                                      Icons.email_outlined,
+                                      color: Colors.grey[600],
                                     ),
-                                  ],
-                                  validator: (val) =>
-                                      AuthValidators.email(context, val),
-                                  hintText: 'Enter Your Email',
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: Colors.grey[600],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
-                              showAppBottomSheet(
-                                context: context,
-                                title: 'Enter 4 Digits Code',
-                                subTitle:
-                                    'Enter the 4 digits code that you received on your email.',
-                                buttonTitle: 'Continue',
-                                buttonColor: AppColors.primary,
-                                widget: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 85.h),
-                                    OtpWidget(controller: otpController),
-                                  ],
-                                ),
-                                onPressed: () {
-                                  otpController.clear();
-                                  Navigator.pop(context);
-                                  showAppBottomSheet(
-                                    context: context,
-                                    title: 'Reset Password',
-                                    subTitle:
-                                        'Set the new password for your account so you can login and access all the features.',
-                                    buttonTitle: 'Update Passwoed',
-                                    buttonColor: AppColors.primary,
-                                    widget: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 29.h),
-                                        AppTextField(
-                                          controller: _password2.controller,
-                                          autovalidateMode: !firstSeen
-                                              ? AutovalidateMode
-                                                    .onUserInteraction
-                                              : null,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.deny(
-                                              RegExp(r'\s'),
+                              if (_key2.currentState!.validate()) {
+                                Navigator.pop(context);
+                                otpController.clear();
+                                showAppBottomSheet(
+                                  context: context,
+                                  title: 'Enter 4 Digits Code',
+                                  subTitle:
+                                      'Enter the 4 digits code that you received on your email.',
+                                  buttonTitle: 'Continue',
+                                  buttonColor: AppColors.primary,
+                                  builder: (setStateSheet, isEnabled) => Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 85.h),
+                                      OtpWidget(
+                                        controller: otpController,
+                                        onChanged: (val) {
+                                          isEnabled.value =
+                                              otpController.text.length == 4;
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    _password2.controller.clear();
+                                    _password3.controller.clear();
+                                    showAppBottomSheet(
+                                      context: context,
+                                      title: 'Reset Password',
+                                      subTitle:
+                                          'Set the new password for your account so you can login and access all the features.',
+                                      buttonTitle: 'Update Passwoed',
+                                      buttonColor: AppColors.primary,
+                                      builder:
+                                          (
+                                            setStateSheet,
+                                            isEnabled,
+                                          ) => Form(
+                                            key: _key3,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(height: 29.h),
+                                                AppTextField(
+                                                  controller:
+                                                      _password2.controller,
+                                                  validator: (val) =>
+                                                      AuthValidators.password(
+                                                        context,
+                                                        val,
+                                                      ),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter.deny(
+                                                      RegExp(r'\s'),
+                                                    ),
+                                                  ],
+                                                  onChanged: (_) {
+                                                    isEnabled.value =
+                                                        _resetPasswordValid;
+                                                  },
+
+                                                  obscureText: isObscure2,
+                                                  hintText: 'New Password',
+                                                  prefixIcon: Icon(
+                                                    Icons.lock,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                  suffixIcon: GestureDetector(
+                                                    onTap: () {
+                                                      setStateSheet(() {
+                                                        isObscure2 =
+                                                            !isObscure2;
+                                                      });
+                                                    },
+                                                    child: Icon(
+                                                      isObscure2
+                                                          ? Icons.visibility_off
+                                                          : Icons.visibility,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 24.h),
+                                                AppTextField(
+                                                  controller:
+                                                      _password3.controller,
+                                                  autovalidateMode:
+                                                      AutovalidateMode
+                                                          .onUserInteraction,
+                                                  validator: (val) =>
+                                                      AuthValidators.confirmPassword(
+                                                        context,
+                                                        val,
+                                                        _password2
+                                                            .controller
+                                                            .text,
+                                                      ),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter.deny(
+                                                      RegExp(r'\s'),
+                                                    ),
+                                                  ],
+                                                  onChanged: (_) {
+                                                    isEnabled.value =
+                                                        _resetPasswordValid;
+                                                  },
+
+                                                  obscureText: isObscure3,
+                                                  hintText: 'Re-enter Passwoed',
+                                                  prefixIcon: Icon(
+                                                    Icons.lock,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                  suffixIcon: GestureDetector(
+                                                    onTap: () {
+                                                      setStateSheet(() {
+                                                        isObscure3 =
+                                                            !isObscure3;
+                                                      });
+                                                    },
+
+                                                    child: Icon(
+                                                      isObscure3
+                                                          ? Icons.visibility_off
+                                                          : Icons.visibility,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                          obscureText: isObscure2,
-                                          hintText: 'New Password',
-                                          prefixIcon: Icon(
-                                            Icons.lock,
-                                            color: Colors.grey[600],
                                           ),
-                                          suffixIcon: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isObscure2 = !isObscure2;
-                                              });
-                                            },
-                                            child: Icon(
-                                              isObscure2
-                                                  ? Icons.visibility_off
-                                                  : Icons.visibility,
-                                              color: Colors.grey[600],
+                                      onPressed: () {
+                                        if (_key3.currentState!.validate()) {
+                                          Navigator.pop(context);
+                                          Navigator.of(
+                                            context,
+                                          ).pushAndRemoveUntil(
+                                            CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  const VerificationSuccessPage(),
                                             ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 24.h),
-                                        AppTextField(
-                                          controller: _password3.controller,
-                                          autovalidateMode: !firstSeen
-                                              ? AutovalidateMode
-                                                    .onUserInteraction
-                                              : null,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.deny(
-                                              RegExp(r'\s'),
-                                            ),
-                                          ],
-                                          obscureText: isObscure3,
-                                          hintText: 'Re-enter Passwoed',
-                                          prefixIcon: Icon(
-                                            Icons.lock,
-                                            color: Colors.grey[600],
-                                          ),
-                                          suffixIcon: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isObscure3 = !isObscure3;
-                                              });
-                                            },
-                                            child: Icon(
-                                              isObscure3
-                                                  ? Icons.visibility_off
-                                                  : Icons.visibility,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                        CupertinoPageRoute(
-                                          builder: (context) =>
-                                              const VerificationSuccessPage(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    },
-                                  );
-                                },
-                              );
+                                            (route) => false,
+                                          );
+                                        }
+                                      },
+                                    );
+                                  },
+                                );
+                              }
                             },
                           );
                         },

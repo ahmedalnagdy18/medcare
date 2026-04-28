@@ -242,6 +242,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               });
                               if (_key.currentState!.validate()) {
                                 // _loginButton(context);
+                                otpController.clear();
                                 showAppBottomSheet(
                                   context: context,
                                   title: 'Enter 4 Digits Code',
@@ -249,18 +250,23 @@ class _SignUpPageState extends State<SignUpPage> {
                                       'Enter the 4 digits code that you received on your email.',
                                   buttonTitle: 'Continue',
                                   buttonColor: AppColors.primary,
-                                  widget: Column(
+                                  builder: (setStateSheet, isEnabled) => Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 85.h),
-                                      OtpWidget(controller: otpController),
+                                      OtpWidget(
+                                        controller: otpController,
+                                        onChanged: (val) {
+                                          isEnabled.value =
+                                              otpController.text.length == 4;
+                                        },
+                                      ),
                                     ],
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    otpController.clear();
                                     Navigator.of(context).pushAndRemoveUntil(
                                       CupertinoPageRoute(
                                         builder: (context) =>

@@ -11,10 +11,12 @@ class OtpWidget extends StatelessWidget {
     required this.controller,
     this.onCompleted,
     this.color,
+    this.onChanged,
   });
   final TextEditingController? controller;
   final Function(String)? onCompleted;
   final Color? color;
+  final Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return Pinput(
@@ -63,6 +65,7 @@ class OtpWidget extends StatelessWidget {
         ),
       ),
       textInputAction: TextInputAction.next,
+      onChanged: onChanged,
     );
   }
 }

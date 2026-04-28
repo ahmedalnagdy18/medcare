@@ -96,14 +96,14 @@ class _SplashScreenState extends State<SplashScreen>
       showImageStage = true;
     });
 
-    await Future<void>.delayed(const Duration(milliseconds: 800));
+    await Future<void>.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
 
     setState(() {
       showBrandStage = true;
     });
 
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
